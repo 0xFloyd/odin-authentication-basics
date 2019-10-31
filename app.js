@@ -1,5 +1,7 @@
 /////// app.js
 
+const dotenv = require('dotenv')
+require('dotenv').config()
 const express = require("express");
 var Router = require('router')
 const path = require("path");
@@ -10,7 +12,13 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
 
-const mongoDb = `mongodb+srv://odinapp:iLICQeauFBwYZMIi@cluster0-xqmwt.mongodb.net/test?retryWrites=true&w=majority`;
+const result = dotenv.config()
+
+if (result.error) {
+    throw result.error
+}
+
+const mongoDb = process.env.DB_HOST;
 mongoose.connect(mongoDb, { useNewUrlParser: true });
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "mongo connection error"));
@@ -92,7 +100,7 @@ app.post("/sign-up", (req, res, next) => {
             password: hashedPassword
         }).save(err => {
             if (err) return next(err);
-            res.redirect("/");
+        res.redirect("/");
         });
     })
 });
